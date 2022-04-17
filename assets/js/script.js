@@ -60,35 +60,51 @@ var quizQuestions = [
 
 
 var startQuiz = function(event) {
-    if (quizQuestions.length < 1) {
-        endQuiz();
-    }
+   clearPage();
+   newContainer();
+   nextQuestion();
 
-    else {
-        nextQuestion();
-    }
 };
 
+var clearPage = function() {
+    //clear page 
+    var mainContent= document.getElementById("main-content")
+    mainContent.remove();
 
-var nextQuestion = function(event) {
-     //clear page 
-     var mainContent= document.getElementById("main-content")
-     mainContent.remove();
-     
+}
+
+var newContainer = function() {
      //create new quiz question container
      var questionHolder = document.createElement("div");
      questionHolder.className = "col-10 col-md-7 col-lg-5";
      questionHolder.id = "main-content"
      mainContentHolder.appendChild(questionHolder);
+}
 
-     //select a random question from the array
+
+var nextQuestion = function(event) {
+    if (quizQuestions.length < 1) {
+        endQuiz();
+    }
+    
+
+     //create new quiz question container
+    //  var questionHolder = document.createElement("div");
+    //  questionHolder.className = "col-10 col-md-7 col-lg-5";
+    //  questionHolder.id = "main-content"
+    //  mainContentHolder.insertBefore(questionHolder, mainContentHolder.firstChild);
+    //id new question container and footer
+    var questionHolder = document.getElementById("main-content");
+    var quizFooter = document.getElementById("quiz-footer");
+
+     //select next question from the array
      var selectedQuestion = quizQuestions[questionNum];
 
  
      //create and append quiz question
      var quizQuestionEl = document.createElement("h2");
      quizQuestionEl.textContent = selectedQuestion.question;
-     questionHolder.appendChild(quizQuestionEl);
+     questionHolder.insertBefore(quizQuestionEl, quizFooter);
  
      //create and append quiz answers
      var multipleChoiceList = document.createElement("ul");
@@ -117,32 +133,35 @@ var nextQuestion = function(event) {
          //append quizAnswer to the multiple choice list
          multipleChoiceList.appendChild(quizAnswer);
      };
-
-     questionHolder.appendChild(multipleChoiceList);
-   
-     
-     
-    
-
-}
+     questionHolder.insertBefore(multipleChoiceList, quizFooter);
+};
 
 
 
 var checkAnswer = function(answer) {
+    clearPage();
+    newContainer();
     console.log(answer.id);
     console.log(quizQuestions[questionNum].correctAnswer);
+    var mainContent = document.querySelector("#main-content");
+    var quizFooter = document.createElement("footer");
+    quizFooter.id = "quiz-footer"
+    mainContent.appendChild(quizFooter);
     if (answer.id == quizQuestions[questionNum].correctAnswer){
         console.log("Correct!");
+        console.log(mainContent);
+        quizFooter.textContent = "Correct!";
+        questionNum += 1;
+        
+        nextQuestion();
     }
-
+    
     else {
         console.log("that's the wrong answer");
+        questionNum += 1;
+        quizFooter.textContent = "Wrong!";
+        nextQuestion();
     }
-    questionNum += 1;
-
-    startQuiz();
-
-    
 }
 
 
