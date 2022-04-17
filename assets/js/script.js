@@ -1,7 +1,10 @@
 var mainContentHolder = document.querySelector("#card-holder");
 var mainContent = document.querySelector("#main-content");
 var startButton = document.querySelector("#start-btn");
+var submitButton = document.querySelector(".submit-btn")
+var questionNum = 0
 
+// array of questions with their choices and correct answer
 var quizQuestions = [
     {
         question : "JavaScript is a ____-side programming language.",
@@ -57,57 +60,90 @@ var quizQuestions = [
 
 
 var startQuiz = function(event) {
-    //clear page 
-    mainContent.remove();
-
-    //create new quiz question container
-    var questionHolder = document.createElement("div");
-    questionHolder.className = "col-10 col-md-7 col-lg-5";
-    questionHolder.id = "main-content"
-    mainContentHolder.appendChild(questionHolder);
-
-    //select a random question from the array
-    var selectedQuestion = quizQuestions[Math.floor(Math.random() * quizQuestions.length)];
-    
-    //create and append quiz question
-    var quizQuestionEl = document.createElement("h2");
-    quizQuestionEl.textContent = selectedQuestion.question;
-    questionHolder.appendChild(quizQuestionEl);
-   
-    //create and append quiz answers
-    var multipleChoiceList = document.createElement("ul");
-    for (var i = 0; i < selectedQuestion.answers.length; i++) {
-        //create var to hold li item
-        var quizAnswer = document.createElement("li");
-
-        //create radio button for answers
-        var quizAnswerRadio = document.createElement("input")
-        quizAnswerRadio.type = "radio";
-        quizAnswerRadio.name = "answer";
-        quizAnswerRadio.id = "option" + i;
-
-        //create label for radio button
-        var label = document.createElement("label");
-        label.htmlFor = "option" + i;
-        label.textContent = selectedQuestion.answers[i];
-   
-
-        //append radio button and label to quizAnswer li item
-        quizAnswer.appendChild(quizAnswerRadio);
-        quizAnswer.appendChild(label);
-
-        //append quizAnswer to the multiple choice list
-        multipleChoiceList.appendChild(quizAnswer);
+    if (quizQuestions.length < 1) {
+        endQuiz();
     }
-    questionHolder.appendChild(multipleChoiceList);
-    
- 
+
+    else {
+        nextQuestion();
+    }
 };
 
+
 var nextQuestion = function(event) {
+     //clear page 
+     var mainContent= document.getElementById("main-content")
+     mainContent.remove();
+     
+     //create new quiz question container
+     var questionHolder = document.createElement("div");
+     questionHolder.className = "col-10 col-md-7 col-lg-5";
+     questionHolder.id = "main-content"
+     mainContentHolder.appendChild(questionHolder);
+
+     //select a random question from the array
+     var selectedQuestion = quizQuestions[questionNum];
+
+ 
+     //create and append quiz question
+     var quizQuestionEl = document.createElement("h2");
+     quizQuestionEl.textContent = selectedQuestion.question;
+     questionHolder.appendChild(quizQuestionEl);
+ 
+     //create and append quiz answers
+     var multipleChoiceList = document.createElement("ul");
+     for (var i = 0; i < selectedQuestion.answers.length; i++) {
+         //create var to hold li item
+         var quizAnswer = document.createElement("li");
+         
+         //create radio button for answers
+         var quizAnswerRadio = document.createElement("input")
+         quizAnswerRadio.type = "radio";
+         quizAnswerRadio.name = "answer";
+         quizAnswerRadio.value = selectedQuestion.answers[i];
+         quizAnswerRadio.id = "option" + i;
+         quizAnswerRadio.setAttribute("onclick", "checkAnswer(this)");
+         
+         //create label for radio button
+         var label = document.createElement("label");
+         label.htmlFor = "option" + i;
+         label.textContent = selectedQuestion.answers[i];
+         
+         
+         //append radio button and label to quizAnswer li item
+         quizAnswer.appendChild(quizAnswerRadio);
+         quizAnswer.appendChild(label);
+         
+         //append quizAnswer to the multiple choice list
+         multipleChoiceList.appendChild(quizAnswer);
+     };
+
+     questionHolder.appendChild(multipleChoiceList);
+   
+     
+     
+    
 
 }
 
+
+
+var checkAnswer = function(answer) {
+    console.log(answer.id);
+    console.log(quizQuestions[questionNum].correctAnswer);
+    if (answer.id == quizQuestions[questionNum].correctAnswer){
+        console.log("Correct!");
+    }
+
+    else {
+        console.log("that's the wrong answer");
+    }
+    questionNum += 1;
+
+    startQuiz();
+
+    
+}
 
 
 startButton.addEventListener("click", startQuiz);
