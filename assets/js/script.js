@@ -229,8 +229,27 @@ var highScoreSubmit = function(event) {
    
     //clear page
     clearPage();
+    highScorePage();
     
     };
+
+var highScorePage = function() {
+    newContainer();
+    var mainContent = document.getElementById("main-content");
+
+    //create high score header
+    var highScoreHeader = document.createElement("h2");
+    highScoreHeader.textContent = "High Scores:"
+    mainContent.appendChild(highScoreHeader);
+
+    //create high score list
+    var highScoreList = document.createElement("ul");
+    var highScoreListItem = document.createElement("li");
+    highScoreListItem.textContent = "1. " + highScores[0].initials + " - " + highScores[0].points
+    highScoreList.appendChild(highScoreListItem);
+    mainContent.appendChild(highScoreList);
+
+}
     
 var endQuiz = function() {
     var mainContent = document.getElementById("main-content");
