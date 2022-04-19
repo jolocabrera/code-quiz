@@ -208,7 +208,6 @@ var highScoreForm = function(event) {
 var highScoreSubmit = function(event) {
     event.preventDefault();
     
-    console.log("form handler");
     //get user input values
     var initialsInput = document.querySelector("input[name='initials']").value;
     
@@ -248,6 +247,71 @@ var highScorePage = function() {
     highScoreListItem.textContent = "1. " + highScores[0].initials + " - " + highScores[0].points
     highScoreList.appendChild(highScoreListItem);
     mainContent.appendChild(highScoreList);
+
+    //create div to hold go back button and clear high scores button
+    var buttonContainer = document.createElement("div");
+
+
+    //create go back button
+    var goBackButton = document.createElement("button");
+    goBackButton.textContent = "Go back";
+    
+    buttonContainer.appendChild(goBackButton);
+
+    //create clear high scores button
+    var clearScoresButton = document.createElement("button");
+    clearScoresButton.textContent = "Clear High Scores"
+    buttonContainer.appendChild(clearScoresButton);
+
+    mainContent.appendChild(buttonContainer);
+    goBackButton.addEventListener("click", goHome);
+    clearScoresButton.addEventListener("click", clearScores);
+
+
+}
+
+var goHome = function() {
+    console.log("going Home");
+    clearPage();
+    homePage();
+
+}
+
+var resetStats = function () {
+    questionNum = 0;
+    score = 0;
+}
+
+var homePage = function() {
+    resetStats();
+    newContainer();
+    var mainContent = document.getElementById("main-content");
+
+    //create home page header
+    var homePageHeader = document.createElement("h1");
+    homePageHeader.textContent = "Coding Quiz Challenge"
+    mainContent.appendChild(homePageHeader);
+
+    //create home page description
+    var homePageDescription = document.createElement("p");
+    homePageDescription.textContent = "Try to answer these ten questions correctly as fast as you can! Your score will be the time you have left multiplied by the number of correct answers you have. Good luck!"
+    mainContent.appendChild(homePageDescription);
+
+    //create start quiz button
+    var startQuizButton = document.createElement("button");
+    startQuizButton.textContent = "Begin Quiz!";
+    startQuizButton.id = "start-btn";
+    startQuizButton.type = "button";
+    startQuizButton.className = "btn btn-primary btn-lg"
+    mainContent.appendChild(startQuizButton);
+
+    var startButton = document.getElementById("start-btn");
+    startButton.addEventListener("click", startQuiz);
+
+}
+
+var clearScores = function() {
+    console.log("clearing scores");
 
 }
     
