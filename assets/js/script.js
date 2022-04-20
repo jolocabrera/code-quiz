@@ -2,9 +2,11 @@ var mainContentHolder = document.querySelector("#card-holder");
 var mainContent = document.querySelector("#main-content");
 var startButton = document.querySelector("#start-btn");
 var submitButton = document.querySelector(".submit-btn")
+var highScoreButton = document.querySelector("#high-score-link");
 var questionNum = 0
 var score = 0
-var timeLeft = 0
+var timeLeft = 60
+var timerDisplay = document.querySelector("#timer-display");
 var finalScore = 0
 var highScores = [];
 
@@ -66,6 +68,7 @@ var quizQuestions = [
 var startQuiz = function(event) {
    clearPage();
    newContainer();
+   startTimer();
    nextQuestion();
 
 };
@@ -83,6 +86,23 @@ var newContainer = function() {
      questionHolder.className = "col-10 col-md-7 col-lg-5";
      questionHolder.id = "main-content"
      mainContentHolder.appendChild(questionHolder);
+}
+
+var startTimer = function(time) {
+    counter = setInterval (timer,1000);
+    function timer() {
+        console.log(timeLeft);
+        timeLeft.textContent = time;
+        time --;
+        timerDisplay.textContent = "Time Left: " + timeLeft + "s";
+        if(time<0) {
+            clearInterval(counter);
+            timerDisplay.textContent = "Time's Up!"
+            clearPage();
+            endQuiz();
+        }
+    }
+
 }
 
 
@@ -227,17 +247,17 @@ var highScoreSubmit = function(event) {
 
     //sort scores from highest to lowest
     sortScores();
-    
+
     //save high scores to local storage
     localStorage.setItem("highscores", JSON.stringify(highScores));
    
-    //clear page
-    clearPage();
+    //high score page
     highScorePage();
     
-    };
+};
 
 var highScorePage = function() {
+    clearPage();
     newContainer();
     var mainContent = document.getElementById("main-content");
 
@@ -279,7 +299,7 @@ var highScorePage = function() {
     clearScoresButton.addEventListener("click", clearScores);
 
 
-}
+};
 
 var loadHighScores = function() {
     // get scores from local storage
@@ -299,7 +319,6 @@ var loadHighScores = function() {
 }
 
 var goHome = function() {
-    console.log("going Home");
     clearPage();
     homePage();
 
@@ -317,21 +336,30 @@ var homePage = function() {
 
     //create home page header
     var homePageHeader = document.createElement("h1");
-    homePageHeader.textContent = "Coding Quiz Challenge"
+    homePageHeader.textContent = "Coding Quiz Challenge";
+    homePageHeader.className = "d-flex col-12 justify-content-center";
+    homePageHeader.id = "home-page-title";
     mainContent.appendChild(homePageHeader);
 
     //create home page description
     var homePageDescription = document.createElement("p");
+    homePageDescription.id = "home-page-description";
+    homePageDescription.className = "d-flex-inline col-12 text-center fw-bold";
     homePageDescription.textContent = "Try to answer these ten questions correctly as fast as you can! Your score will be the time you have left multiplied by the number of correct answers you have. Good luck!"
     mainContent.appendChild(homePageDescription);
 
+
+    //create start quiz button container
+    var quizButtonContainer = document.createElement("div");
+    quizButtonContainer.className = "text-center"
     //create start quiz button
     var startQuizButton = document.createElement("button");
     startQuizButton.textContent = "Begin Quiz!";
     startQuizButton.id = "start-btn";
     startQuizButton.type = "button";
     startQuizButton.className = "btn btn-primary btn-lg"
-    mainContent.appendChild(startQuizButton);
+    quizButtonContainer.appendChild(startQuizButton);
+    mainContent.appendChild(quizButtonContainer);
 
     var startButton = document.getElementById("start-btn");
     startButton.addEventListener("click", startQuiz);
@@ -342,6 +370,7 @@ var sortScores = function () {
     highScores.sort(function(a, b) {
         return a.points - b.points;
     });
+    highScores.reverse();
 }
 
 var clearScores = function() {
@@ -380,4 +409,11 @@ var endQuiz = function() {
 };
 
 loadHighScores();
-startButton.addEventListener("click", startQuiz);
+highScoreButton.addEventListener("click", function(e){
+    e.preventDefault();
+    highScorePage();
+});
+startButton.addEventListener("click", function(){
+    startQuiz();
+    startTimer(60);
+});
