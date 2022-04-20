@@ -225,6 +225,9 @@ var highScoreSubmit = function(event) {
     //store high scores in array
     highScores.push(highScoreObj);
 
+    //sort scores from highest to lowest
+    sortScores();
+    
     //save high scores to local storage
     localStorage.setItem("highscores", JSON.stringify(highScores));
    
@@ -246,6 +249,7 @@ var highScorePage = function() {
     //create high score list
     var highScoreList = document.createElement("ul");
     highScoreList.id = "high-score-list";
+
     //pull high scores from local storage and append them to the list
     for (var i = 0; i < highScores.length; i++) {
         var highScoreListItem = document.createElement("li");
@@ -332,6 +336,12 @@ var homePage = function() {
     var startButton = document.getElementById("start-btn");
     startButton.addEventListener("click", startQuiz);
 
+}
+
+var sortScores = function () {
+    highScores.sort(function(a, b) {
+        return a.points - b.points;
+    });
 }
 
 var clearScores = function() {
