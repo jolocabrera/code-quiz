@@ -207,7 +207,6 @@ var highScoreForm = function(event) {
 
 var highScoreSubmit = function(event) {
     event.preventDefault();
-    
     //get user input values
     var initialsInput = document.querySelector("input[name='initials']").value;
     
@@ -225,6 +224,9 @@ var highScoreSubmit = function(event) {
         
     //store high scores in array
     highScores.push(highScoreObj);
+
+    //save high scores to local storage
+    localStorage.setItem("highscores", JSON.stringify(highScores));
    
     //clear page
     clearPage();
@@ -243,9 +245,14 @@ var highScorePage = function() {
 
     //create high score list
     var highScoreList = document.createElement("ul");
-    var highScoreListItem = document.createElement("li");
-    highScoreListItem.textContent = "1. " + highScores[0].initials + " - " + highScores[0].points
-    highScoreList.appendChild(highScoreListItem);
+    highScoreList.id = "high-score-list";
+    //pull high scores from local storage and append them to the list
+    for (var i = 0; i < highScores.length; i++) {
+        var highScoreListItem = document.createElement("li");
+        highScoreListItem.className = "high-score-list-item";
+        highScoreListItem.textContent =  (i+1) + ". " + highScores[i].initials + " - " + highScores[i].points
+        highScoreList.appendChild(highScoreListItem);
+    }
     mainContent.appendChild(highScoreList);
 
     //create div to hold go back button and clear high scores button
@@ -267,6 +274,23 @@ var highScorePage = function() {
     goBackButton.addEventListener("click", goHome);
     clearScoresButton.addEventListener("click", clearScores);
 
+
+}
+
+var loadHighScores = function() {
+    // get scores from local storage
+    var savedScores = localStorage.getItem("highscores")
+
+    if(!savedScores) {
+        highScores = [];
+        return false;
+    }
+
+    savedScores = JSON.parse(savedScores);
+
+    for (i = 0; i < savedScores.length; i++) {
+        highScores.push(savedScores[i]);
+    }
 
 }
 
@@ -311,7 +335,11 @@ var homePage = function() {
 }
 
 var clearScores = function() {
-    console.log("clearing scores");
+    highScores = [];
+    localStorage.setItem("highscores", JSON.stringify(highScores));
+    var highScoreList = document.querySelector("#high-score-list");
+    highScoreList.remove();
+
 
 }
     
@@ -341,5 +369,5 @@ var endQuiz = function() {
     
 };
 
-
+loadHighScores();
 startButton.addEventListener("click", startQuiz);
