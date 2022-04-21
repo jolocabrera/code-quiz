@@ -5,7 +5,7 @@ var submitButton = document.querySelector(".submit-btn")
 var highScoreButton = document.querySelector("#high-score-link");
 var questionNum = 0
 var score = 0
-var timeLeft = 60
+var timeLeft = 75
 var timerDisplay = document.querySelector("#timer-display");
 var finalScore = 0
 var highScores = [];
@@ -13,108 +13,115 @@ var highScores = [];
 // array of questions with their choices and correct answer
 var quizQuestions = [
     {
-        question : "JavaScript is a ____-side programming language.",
-        answers : ["Client", "Server", "Both", "None"],
-        correctAnswer : "option2"
+        question: "JavaScript is a ____-side programming language.",
+        answers: ["Client", "Server", "Both", "None"],
+        correctAnswer: "option2"
     },
     {
-        question : "Which of the following will write the message 'Hello Data Flair!' in an alert box?",
-        answers : ["alertBox('Hello DataFlair!');", "alert(Hello DataFlair!);", "msgAlert('Hello DataFlair!');", "alert('Hello DataFlair!');"],
-        correctAnswer : "option3"
+        question: "Which of the following will write the message 'Hello Data Flair!' in an alert box?",
+        answers: ["alertBox('Hello DataFlair!');", "alert(Hello DataFlair!);", "msgAlert('Hello DataFlair!');", "alert('Hello DataFlair!');"],
+        correctAnswer: "option3"
     },
     {
-        question : "How do you find the minimum of x and y using JavaScript",
-        answers : ["min(x,y);", "Math.min(x,y)", "Math.min(xy)", "min(xy);"],
-        correctAnswer : "option1"
+        question: "How do you find the minimum of x and y using JavaScript",
+        answers: ["min(x,y);", "Math.min(x,y)", "Math.min(xy)", "min(xy);"],
+        correctAnswer: "option1"
     },
     {
-        question : "Which JavaScript label catches all the values, except for the ones specified?",
-        answers : ["catch", "label", "try", "default"],
-        correctAnswer : "option3"
+        question: "Which JavaScript label catches all the values, except for the ones specified?",
+        answers: ["catch", "label", "try", "default"],
+        correctAnswer: "option3"
     },
     {
-        question : "Which is the correct 'if' statements to execute certain code if 'x' is equal to 2?",
-        answers : ["if(x 2)", "if(x=2)", "if(x==2)", "if(x!=2"],
-        correctAnswer : "option2"
+        question: "Which is the correct 'if' statements to execute certain code if 'x' is equal to 2?",
+        answers: ["if(x 2)", "if(x=2)", "if(x==2)", "if(x!=2"],
+        correctAnswer: "option2"
     },
     {
-        question : "What will the code return: Boolean(3<7)",
-        answers : ["true", "false", "NaN", "SyntaxError"],
-        correctAnswer : "option0"
+        question: "What will the code return: Boolean(3<7)",
+        answers: ["true", "false", "NaN", "SyntaxError"],
+        correctAnswer: "option0"
     },
     {
-        question : "How can you get the total number of arguments passed to a function?",
-        answers : ["Using args.length property", "Using arguments.length property", "Both of the above", "None of the above"],
-        correctAnswer : "option1"
+        question: "How can you get the total number of arguments passed to a function?",
+        answers: ["Using args.length property", "Using arguments.length property", "Both of the above", "None of the above"],
+        correctAnswer: "option1"
     },
     {
-        question : "Which built-in method adds one or more elements to the end of an array and returns the new length of the array?",
-        answers : ["last()", "put()", "push()", "None of the above"],
-        correctAnswer : "option2"
+        question: "Which built-in method adds one or more elements to the end of an array and returns the new length of the array?",
+        answers: ["last()", "put()", "push()", "None of the above"],
+        correctAnswer: "option2"
     },
     {
-        question : "Which built-in method returns the calling string value converted to upper case?",
-        answers : ["toUpperCase()", "toUpper()", "changeCase(case)", "None of the above"],
-        correctAnswer : "option0"
+        question: "Which built-in method returns the calling string value converted to upper case?",
+        answers: ["toUpperCase()", "toUpper()", "changeCase(case)", "None of the above"],
+        correctAnswer: "option0"
     },
     {
-        question : "Which of the following function of String object returns a number indicating the Unicode value of the character at the given index?",
-        answers : ["charAt()", "charCodeAt()", "concat()", "indexOf()"],
-        correctAnswer : "option1"
+        question: "Which of the following function of String object returns a number indicating the Unicode value of the character at the given index?",
+        answers: ["charAt()", "charCodeAt()", "concat()", "indexOf()"],
+        correctAnswer: "option1"
     }
 ]
 
 
-var startQuiz = function(event) {
-   clearPage();
-   newContainer();
-   startTimer();
-   nextQuestion();
+var startQuiz = function () {
+    startTimer(60);
+    clearPage();
+    newContainer();
+    nextQuestion();
 
 };
 
-var clearPage = function() {
+var clearPage = function () {
     //clear page 
-    var mainContent= document.getElementById("main-content")
+    var mainContent = document.getElementById("main-content")
     mainContent.remove();
 
 }
 
-var newContainer = function() {
-     //create new quiz question container
-     var questionHolder = document.createElement("div");
-     questionHolder.className = "col-10 col-md-7 col-lg-5";
-     questionHolder.id = "main-content"
-     mainContentHolder.appendChild(questionHolder);
+var newContainer = function () {
+    //create new quiz question container
+    var questionHolder = document.createElement("div");
+    questionHolder.className = "col-10 col-md-7 col-lg-5";
+    questionHolder.id = "main-content"
+    mainContentHolder.appendChild(questionHolder);
 }
 
-var startTimer = function(time) {
-    counter = setInterval (timer,1000);
+var startTimer = function (time) {
+    timeLeft = time;
+    counter = setInterval(timer, 1000);
     function timer() {
-        console.log(timeLeft);
-        timeLeft.textContent = time;
-        time --;
         timerDisplay.textContent = "Time Left: " + timeLeft + "s";
-        if(time<0) {
+        timeLeft --;
+        if (timeLeft < 0) {
             clearInterval(counter);
             timerDisplay.textContent = "Time's Up!"
             clearPage();
+            newContainer();
             endQuiz();
-        }
-    }
+        };
+
+        // if (questionNum === quizQuestions.length) {
+        //     clearInterval(counter);
+        //     timerDisplay.textContent = "Time Left: " + timeLeft + "s";
+        // };
+    };
 
 }
 
 
-var nextQuestion = function(event) {
+
+
+var nextQuestion = function (event) {
     if (questionNum === quizQuestions.length) {
         endQuiz();
     }
 
     else {
 
-        
-        
+
+
         //create new quiz question container
         //  var questionHolder = document.createElement("div");
         //  questionHolder.className = "col-10 col-md-7 col-lg-5";
@@ -126,19 +133,19 @@ var nextQuestion = function(event) {
 
         //select next question from the array
         var selectedQuestion = quizQuestions[questionNum];
-        
-        
+
+
         //create and append quiz question
         var quizQuestionEl = document.createElement("h2");
         quizQuestionEl.textContent = selectedQuestion.question;
         questionHolder.insertBefore(quizQuestionEl, quizFooter);
-        
+
         //create and append quiz answers
         var multipleChoiceList = document.createElement("ul");
         for (var i = 0; i < selectedQuestion.answers.length; i++) {
             //create var to hold li item
             var quizAnswer = document.createElement("li");
-            
+
             //create radio button for answers
             var quizAnswerRadio = document.createElement("input")
             quizAnswerRadio.type = "radio";
@@ -146,49 +153,49 @@ var nextQuestion = function(event) {
             quizAnswerRadio.value = selectedQuestion.answers[i];
             quizAnswerRadio.id = "option" + i;
             quizAnswerRadio.setAttribute("onclick", "checkAnswer(this)");
-            
+
             //create label for radio button
             var label = document.createElement("label");
             label.htmlFor = "option" + i;
             label.textContent = selectedQuestion.answers[i];
-            
-            
+
+
             //append radio button and label to quizAnswer li item
             quizAnswer.appendChild(quizAnswerRadio);
             quizAnswer.appendChild(label);
-            
+
             //append quizAnswer to the multiple choice list
             multipleChoiceList.appendChild(quizAnswer);
         };
         questionHolder.insertBefore(multipleChoiceList, quizFooter);
     }
-     
+
 };
 
 
 
-var checkAnswer = function(answer) {
+var checkAnswer = function (answer) {
     clearPage();
     newContainer();
     var mainContent = document.querySelector("#main-content");
     var quizFooter = document.createElement("footer");
     quizFooter.id = "quiz-footer"
     mainContent.appendChild(quizFooter);
-    if (answer.id == quizQuestions[questionNum].correctAnswer){
+    if (answer.id == quizQuestions[questionNum].correctAnswer) {
         quizFooter.textContent = "Correct!";
         questionNum += 1;
         score += 1
-        
+
         nextQuestion();
     }
-    
+
     else {
         questionNum += 1;
         quizFooter.textContent = "Wrong!";
         nextQuestion();
     }
 }
-var highScoreForm = function(event) {
+var highScoreForm = function (event) {
     var mainContent = document.getElementById("main-content");
     var quizFooter = document.getElementById("quiz-footer");
 
@@ -219,29 +226,29 @@ var highScoreForm = function(event) {
     submitHighScore.textContent = "Submit!"
     submitHighScoreContainer.appendChild(submitHighScore);
     formHighScore.appendChild(submitHighScoreContainer);
-    
-    
+
+
     //append form to mainContent
     mainContent.insertBefore(formHighScore, quizFooter);
 }
 
-var highScoreSubmit = function(event) {
+var highScoreSubmit = function (event) {
     event.preventDefault();
     //get user input values
     var initialsInput = document.querySelector("input[name='initials']").value;
-    
+
     //input validation
     if (!initialsInput) {
-            alert("Please enter your initials into the form!");
-            return false;
-        }
-        
+        alert("Please enter your initials into the form!");
+        return false;
+    }
+
     //create object to store high score
     var highScoreObj = {
         initials: initialsInput,
         points: finalScore,
     };
-        
+
     //store high scores in array
     highScores.push(highScoreObj);
 
@@ -250,13 +257,14 @@ var highScoreSubmit = function(event) {
 
     //save high scores to local storage
     localStorage.setItem("highscores", JSON.stringify(highScores));
-   
+
     //high score page
     highScorePage();
-    
+
 };
 
-var highScorePage = function() {
+var highScorePage = function () {
+    clearInterval(counter);
     clearPage();
     newContainer();
     var mainContent = document.getElementById("main-content");
@@ -274,7 +282,7 @@ var highScorePage = function() {
     for (var i = 0; i < highScores.length; i++) {
         var highScoreListItem = document.createElement("li");
         highScoreListItem.className = "high-score-list-item";
-        highScoreListItem.textContent =  (i+1) + ". " + highScores[i].initials + " - " + highScores[i].points
+        highScoreListItem.textContent = (i + 1) + ". " + highScores[i].initials + " - " + highScores[i].points
         highScoreList.appendChild(highScoreListItem);
     }
     mainContent.appendChild(highScoreList);
@@ -286,7 +294,7 @@ var highScorePage = function() {
     //create go back button
     var goBackButton = document.createElement("button");
     goBackButton.textContent = "Go back";
-    
+
     buttonContainer.appendChild(goBackButton);
 
     //create clear high scores button
@@ -301,11 +309,11 @@ var highScorePage = function() {
 
 };
 
-var loadHighScores = function() {
+var loadHighScores = function () {
     // get scores from local storage
     var savedScores = localStorage.getItem("highscores")
 
-    if(!savedScores) {
+    if (!savedScores) {
         highScores = [];
         return false;
     }
@@ -318,7 +326,7 @@ var loadHighScores = function() {
 
 }
 
-var goHome = function() {
+var goHome = function () {
     clearPage();
     homePage();
 
@@ -329,8 +337,9 @@ var resetStats = function () {
     score = 0;
 }
 
-var homePage = function() {
+var homePage = function () {
     resetStats();
+    timerDisplay.textContent = "Time Left: "
     newContainer();
     var mainContent = document.getElementById("main-content");
 
@@ -367,13 +376,13 @@ var homePage = function() {
 }
 
 var sortScores = function () {
-    highScores.sort(function(a, b) {
+    highScores.sort(function (a, b) {
         return a.points - b.points;
     });
     highScores.reverse();
 }
 
-var clearScores = function() {
+var clearScores = function () {
     highScores = [];
     localStorage.setItem("highscores", JSON.stringify(highScores));
     var highScoreList = document.querySelector("#high-score-list");
@@ -381,39 +390,41 @@ var clearScores = function() {
 
 
 }
-    
-var endQuiz = function() {
+
+var endQuiz = function () {
+    clearInterval(counter);
     var mainContent = document.getElementById("main-content");
     var quizFooter = document.getElementById("quiz-footer");
     //calculate final score
-    finalScore = score + timeLeft
-        
+    finalScore = score * timeLeft
+
     // create and insert final message
     var finalMessage = document.createElement("h2");
     finalMessage.textContent = "You're All Done!"
     mainContent.insertBefore(finalMessage, quizFooter);
-    
+
     // create and insert final score
+    var correctAnswersMsg = document.createElement("p");
+    correctAnswersMsg.textContent = "You answered " + score + " questions correctly!";
+    mainContent.insertBefore(correctAnswersMsg, quizFooter);
+
     var finalScoreMsg = document.createElement("p");
     finalScoreMsg.textContent = "Your final score is " + finalScore + "."
     mainContent.insertBefore(finalScoreMsg, quizFooter);
-    
+
     //create highscore form
     highScoreForm();
 
     // add event listener to form button
-    
+
     var submitHighScoreButton = document.getElementById("submit-high-score");
     submitHighScoreButton.addEventListener("click", highScoreSubmit);
-    
+
 };
 
 loadHighScores();
-highScoreButton.addEventListener("click", function(e){
+highScoreButton.addEventListener("click", function (e) {
     e.preventDefault();
     highScorePage();
 });
-startButton.addEventListener("click", function(){
-    startQuiz();
-    startTimer(60);
-});
+startButton.addEventListener("click", startQuiz);
