@@ -119,14 +119,6 @@ var nextQuestion = function (event) {
     }
 
     else {
-
-
-
-        //create new quiz question container
-        //  var questionHolder = document.createElement("div");
-        //  questionHolder.className = "col-10 col-md-7 col-lg-5";
-        //  questionHolder.id = "main-content"
-        //  mainContentHolder.insertBefore(questionHolder, mainContentHolder.firstChild);
         //id new question container and footer
         var questionHolder = document.getElementById("main-content");
         var quizFooter = document.getElementById("quiz-footer");
@@ -136,33 +128,30 @@ var nextQuestion = function (event) {
 
 
         //create and append quiz question
-        var quizQuestionEl = document.createElement("h2");
+        var quizQuestionEl = document.createElement("h1");
         quizQuestionEl.textContent = selectedQuestion.question;
+        quizQuestionEl.className = "mb-3"
         questionHolder.insertBefore(quizQuestionEl, quizFooter);
 
         //create and append quiz answers
         var multipleChoiceList = document.createElement("ul");
+        multipleChoiceList.className = "list-unstyled col-11 col-md-9 col-xl-5";
         for (var i = 0; i < selectedQuestion.answers.length; i++) {
             //create var to hold li item
             var quizAnswer = document.createElement("li");
 
             //create radio button for answers
             var quizAnswerRadio = document.createElement("input")
-            quizAnswerRadio.type = "radio";
+            quizAnswerRadio.type = "button";
             quizAnswerRadio.name = "answer";
-            quizAnswerRadio.value = selectedQuestion.answers[i];
+            quizAnswerRadio.value = (i+1) + ". " + selectedQuestion.answers[i];
             quizAnswerRadio.id = "option" + i;
+            quizAnswerRadio.className = "btn btn-primary btn-lg mb-2 text-start text-wrap col-12";
             quizAnswerRadio.setAttribute("onclick", "checkAnswer(this)");
 
-            //create label for radio button
-            var label = document.createElement("label");
-            label.htmlFor = "option" + i;
-            label.textContent = selectedQuestion.answers[i];
-
-
-            //append radio button and label to quizAnswer li item
+            //append button to quizAnswer li item
             quizAnswer.appendChild(quizAnswerRadio);
-            quizAnswer.appendChild(label);
+            
 
             //append quizAnswer to the multiple choice list
             multipleChoiceList.appendChild(quizAnswer);
@@ -180,6 +169,7 @@ var checkAnswer = function (answer) {
     var mainContent = document.querySelector("#main-content");
     var quizFooter = document.createElement("footer");
     quizFooter.id = "quiz-footer"
+    quizFooter.className = "border-top border-dark fs-2 fst-italic text-muted mt-2"
     mainContent.appendChild(quizFooter);
     if (answer.id == quizQuestions[questionNum].correctAnswer) {
         quizFooter.textContent = "Correct!";
@@ -202,25 +192,28 @@ var highScoreForm = function (event) {
     //create div to hold initials entry form
     var formHighScore = document.createElement("form");
     formHighScore.id = "high-score-form";
+
     //"Enter initials text before input form"
     var spanHighScore = document.createElement("span");
     spanHighScore.textContent = "Enter initials: "
+    spanHighScore.className = "d-inline mx-1"
     formHighScore.appendChild(spanHighScore);
 
     //user input form for initials
     var enterHighScoreContainer = document.createElement("div");
-    enterHighScoreContainer.className = "form-group";
+    enterHighScoreContainer.className = "form-group d-inline mx-1";
     var enterHighScore = document.createElement("input")
     enterHighScore.type = "text";
     enterHighScore.name = "initials";
+    enterHighScore.className = "rounded"
     enterHighScoreContainer.appendChild(enterHighScore);
     formHighScore.appendChild(enterHighScoreContainer);
 
     //submit button for initials
     var submitHighScoreContainer = document.createElement("div");
-    submitHighScoreContainer.className = "form-group"
+    submitHighScoreContainer.className = "form-group d-inline mx-1"
     var submitHighScore = document.createElement("button");
-    submitHighScore.class = "btn"
+    submitHighScore.className = "btn btn-primary rounded"
     submitHighScore.id = "submit-high-score"
     submitHighScore.type = "button"
     submitHighScore.textContent = "Submit!"
@@ -264,49 +257,52 @@ var highScoreSubmit = function (event) {
 };
 
 var highScorePage = function () {
-    clearInterval(counter);
     clearPage();
     newContainer();
     var mainContent = document.getElementById("main-content");
-
+    
     //create high score header
-    var highScoreHeader = document.createElement("h2");
-    highScoreHeader.textContent = "High Scores:"
+    var highScoreHeader = document.createElement("h1");
+    highScoreHeader.textContent = "High Scores"
     mainContent.appendChild(highScoreHeader);
-
+    
     //create high score list
     var highScoreList = document.createElement("ul");
+    highScoreList.className = "list-unstyled col-6"
     highScoreList.id = "high-score-list";
-
+    
     //pull high scores from local storage and append them to the list
     for (var i = 0; i < highScores.length; i++) {
         var highScoreListItem = document.createElement("li");
-        highScoreListItem.className = "high-score-list-item";
+        highScoreListItem.className = "high-score-list-item bg-primary bg-opacity-50 mb-2 p-1";
         highScoreListItem.textContent = (i + 1) + ". " + highScores[i].initials + " - " + highScores[i].points
         highScoreList.appendChild(highScoreListItem);
     }
     mainContent.appendChild(highScoreList);
-
+    
     //create div to hold go back button and clear high scores button
     var buttonContainer = document.createElement("div");
-
-
+    
+    
     //create go back button
     var goBackButton = document.createElement("button");
     goBackButton.textContent = "Go back";
-
+    goBackButton.className = "btn btn-primary me-1"
+    
     buttonContainer.appendChild(goBackButton);
-
+    
     //create clear high scores button
     var clearScoresButton = document.createElement("button");
     clearScoresButton.textContent = "Clear High Scores"
+    clearScoresButton.className = "btn btn-danger ms-1"
     buttonContainer.appendChild(clearScoresButton);
-
+    
     mainContent.appendChild(buttonContainer);
     goBackButton.addEventListener("click", goHome);
     clearScoresButton.addEventListener("click", clearScores);
-
-
+    
+    
+    clearInterval(counter);
 };
 
 var loadHighScores = function () {
@@ -354,7 +350,7 @@ var homePage = function () {
     var homePageDescription = document.createElement("p");
     homePageDescription.id = "home-page-description";
     homePageDescription.className = "d-flex-inline col-12 text-center fw-bold";
-    homePageDescription.textContent = "Try to answer these ten questions correctly as fast as you can! Your score will be the time you have left multiplied by the number of correct answers you have. Good luck!"
+    homePageDescription.textContent = "You will have 1 minute to answer these ten questions on Javascript Fundamentals.  Your score will be the time you have left multiplied by the number of correct answers you have. Good luck!"
     mainContent.appendChild(homePageDescription);
 
 
@@ -423,8 +419,10 @@ var endQuiz = function () {
 };
 
 loadHighScores();
+
 highScoreButton.addEventListener("click", function (e) {
     e.preventDefault();
     highScorePage();
 });
+
 startButton.addEventListener("click", startQuiz);
